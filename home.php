@@ -25,18 +25,18 @@ $fac_name = $_SESSION['user'];
     //echo "Here";
 	$stid = " SELECT * FROM faculty_courses where user_name ='$fac_name' ";	
 	
-	$result = @mysql_query($stid) or die("Could not process". mysql_error() );
+	$result = mysqli_query($con,$stid) or die("Could not process". mysqli_error() );
 
-	$row = mysql_fetch_array($result);
+	$row = mysqli_fetch_array($result);
 
-	$count = mysql_num_rows($result);
+	$count = mysqli_num_rows($result);
 	//var_dump($count);
 
 	if($count==0)
 		{   //status check wheather status open or close
 			echo '<h3>You can select maximum 3 courses!</h3>';
 			$query = "SELECT * FROM courses where status='open'";
-		    $run = mysql_query($query);
+		    $run = mysqli_query($con,$query);
             echo '<table border="1">
             <tr>
 			<td>Select -</td>
@@ -45,7 +45,7 @@ $fac_name = $_SESSION['user'];
 			<td>Current Status</td>
             </tr>';
             //show value with check box.checkbox will select and show c_name,section,status with the help of c_id from course table
-			while ($row = mysql_fetch_assoc($run))
+			while ($row = mysqli_fetch_assoc($run))
 			{
 				echo '<form action="" method="POST">
 				<tr>
@@ -69,7 +69,7 @@ $fac_name = $_SESSION['user'];
 	elseif($count > 0 && $count < 3)
 		{
 			$query = "SELECT * FROM courses where status='open'";
-		    $run = mysql_query($query);
+		    $run = mysqli_query($con, $query);
              echo '<table border="1">
             <tr>
 			<td>Select -</td>
@@ -108,9 +108,9 @@ if(isset($_POST['checkbox'])) {
 
 	 /* this section is for the faculty name where this is == first_name + last_name */
 	 $query_for_concat = "SELECT * FROM faculty where user_name='$fac_name' ";
-     $run_for_concat = mysql_query($query_for_concat);
+     $run_for_concat = mysqli_query($con, $query_for_concat);
 
-		$row_for_concat = mysql_fetch_assoc($run_for_concat);
+		$row_for_concat = mysqli_fetch_assoc($run_for_concat);
 		$faculty_name_concat = $row_for_concat["first_name"].' '.$row_for_concat["last_name"];
 		//echo($faculty_name_concat);
 		/* end of the name concatanation */
@@ -124,14 +124,14 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
 			{
 				echo $key."</br>";
 				$query_course = "SELECT * FROM courses where c_id='$key' ";
-				$run_for_course = mysql_query($query_course);
-				$row_for_course = mysql_fetch_assoc($run_for_course);
+				$run_for_course = mysqli_query($con, $query_course);
+				$row_for_course = mysqli_fetch_assoc($run_for_course);
 				
 				$query_course_data = $row_for_course["c_name"];
 				$query_section_data = $row_for_course["section"];
 				
 				$query_insert = " INSERT INTO faculty_courses( user_name,faculty_name,course_title,section ) VALUES ('$fac_name','$faculty_name_concat','$query_course_data','$query_section_data') ";
-                $result_insert = @mysql_query($query_insert) or die("Could not process". mysql_error() );
+                $result_insert = mysqli_query($con, $query_insert) or die("Could not process". mysqli_error() );
                 
                      if(!$result_insert) 
 					{
@@ -144,7 +144,7 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
 				    }
 				//update value 	
 				$query_update = "UPDATE courses SET status='closed' WHERE c_id='$key' ";
-				$result_update = @mysql_query($query_update) or die("Could not process". mysql_error() );
+				$result_update = mysqli_query($con, $query_update) or die("Could not process". mysqli_error() );
                      if(!$result_update) 
 					{
 						echo "Failed !";
@@ -173,7 +173,7 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
      $query = "SELECT * FROM faculty where user_name='$fac_name' ";
 	 
 	 
-     $run = mysql_query($query);
+     $run = mysqli_query($con, $query);
 	
 
         echo '<table border="1">
@@ -185,7 +185,7 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
             <td>Phone</td>
             </tr>';
 		
-        while ($row = mysql_fetch_assoc($run)) //show value in faulty_basic// 
+        while ($row = mysqli_fetch_assoc($run)) //show value in faulty_basic// 
 		{
 			echo '<form action="" method="POST"><tr>
             <td>'. $row["user_name"] .'</td>
@@ -206,7 +206,7 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
      
 <?php
 		$query = "SELECT * FROM faculty_courses where user_name ='$fac_name'"; //show registered course in registered section
-		$run = mysql_query($query);
+		$run = mysqli_query($con, $query);
 		echo '<br>';
 		echo '<h3>Courses I Have Registered</h3>';
 		echo "Courses Registered: ";
@@ -219,7 +219,7 @@ if( $_SERVER["REQUEST_METHOD"] == "POST" ) //portion for insert value in faculty
 		<th>Drop Course</th>
         </tr>';
 
-		while ($row = mysql_fetch_assoc($run)) // go to delete.php with serial_no from faculty_course
+		while ($row = mysqli_fetch_assoc($run)) // go to delete.php with serial_no from faculty_course
 		{
 			echo '<form action="" method="POST">
 			<tr>

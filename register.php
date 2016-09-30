@@ -8,10 +8,10 @@
 	if( $_SERVER["REQUEST_METHOD"] == "POST" ) 
 	{
 		if($_POST["user_name"]) {
-			$user_name = mysql_real_escape_string( trim( $_POST["user_name"] ));
+			$user_name = mysqli_real_escape_string( $con, trim( $_POST["user_name"] ));
 		}
 		if($_POST["password"]) {
-			$password = mysql_real_escape_string( trim( $_POST["password"] ));
+			$password = mysqli_real_escape_string( $con, trim( $_POST["password"] ));
 		}
 				
 			$isValid = true;
@@ -30,10 +30,10 @@
 				if( $isValid ) 
 					{
 						$stid = "SELECT * FROM faculty WHERE user_name='$user_name' AND password='$password' ";
-						$result = @mysql_query($stid) or die("Could not process". mysql_error() );
+						$result = mysqli_query($con, $stid) or die("Could not process". mysqli_error() );
 					
-						$row = mysql_fetch_array($result);
-						$count = mysql_num_rows($result);
+						$row = mysqli_fetch_array($result);
+						$count = mysqli_num_rows($result);
 						if($count!=0)
 						   {
 							   // creating a session variable
